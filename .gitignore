@@ -1,0 +1,42 @@
+# OS
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Env files
+.env
+.env.*
+
+# Build / cache
+dist/
+build/
+.cache/
+
+# Databases and backups
+*.db
+*.db-journal
+*.bak
+*.bak_*
+
+# ML artifacts (large binaries)
+*.pkl
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/

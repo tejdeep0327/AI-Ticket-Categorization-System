@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - AI Ticket System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) window.location.href = "login.html";
+</script>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">AI</div>
+      AI Ticket
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="create.html">Create Ticket</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="help.html">Help Center</a></li>
+      <li id="authLink"></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="dashboard-shell">
+  <section class="dashboard-head">
+    <p class="dashboard-kicker">Account</p>
+    <h1>Profile</h1>
+    <p>Manage your personal details and account password.</p>
+  </section>
+
+  <section class="dashboard-table-card" style="margin-top:14px;">
+    <div class="dashboard-table-head">
+      <h2>Profile Details</h2>
+      <span>Saved to backend</span>
+    </div>
+
+    <form id="profileForm" class="dashboard-controls" style="grid-template-columns:1fr 1fr auto;">
+      <input id="profileNameInput" type="text" placeholder="Name" required />
+      <input id="profileEmailInput" type="email" placeholder="Email" disabled />
+      <button type="submit" class="control-btn">Save Profile</button>
+    </form>
+
+    <div id="profileMsg" class="auth-message"></div>
+  </section>
+
+  <section class="dashboard-table-card" style="margin-top:14px;">
+    <div class="dashboard-table-head">
+      <h2>Change Password</h2>
+      <span>Use your current password</span>
+    </div>
+
+    <form id="passwordForm" class="dashboard-controls" style="grid-template-columns:1fr 1fr 1fr auto;">
+      <input id="currentPassword" type="password" placeholder="Current password" required />
+      <input id="newPassword" type="password" placeholder="New password" required minlength="4" />
+      <input id="confirmPassword" type="password" placeholder="Confirm new password" required minlength="4" />
+      <button type="submit" class="control-btn">Update Password</button>
+    </form>
+
+    <div id="passwordMsg" class="auth-message"></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <ul class="footer-links">
+      <li><a href="#" class="about-link">About</a></li>
+      <li><a href="#" class="privacy-policy-link">Privacy Policy</a></li>
+      <li><a href="help.html#contact">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 AI Ticket System. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  function renderAuthMenu(currentUser) {
+    const authLink = document.getElementById("authLink");
+    if (!authLink) return;
+
+    if (currentUser) {
+      const rawLabel = String(currentUser.name || currentUser.email || "Account");
+      const label = rawLabel.split(" ")[0];
+      const initial = label.charAt(0).toUpperCase();
+      authLink.innerHTML = `
+        <div class="auth-menu">
+          <button type="button" class="auth-menu-toggle">
+            <span class="auth-avatar">${initial}</span>
+            <span class="auth-label">${label}</span>
+            <span class="auth-caret">▾</span>
+          </button>
+          <div class="auth-dropdown">
+            <a href="profile.html" class="auth-menu-item">Profile</a>
+            <a href="settings.html" class="auth-menu-item">Settings</a>
+            <button type="button" class="auth-menu-item auth-logout-btn">Logout</button>
+          </div>
+        </div>`;
+    } else {
+      authLink.innerHTML = `<a href="login.html">Login</a>`;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    renderAuthMenu(currentUser);
+
+    const profileForm = document.getElementById("profileForm");
+    const nameInput = document.getElementById("profileNameInput");
+    const emailInput = document.getElementById("profileEmailInput");
+    const profileMsg = document.getElementById("profileMsg");
+
+    const passwordForm = document.getElementById("passwordForm");
+    const currentPassword = document.getElementById("currentPassword");
+    const newPassword = document.getElementById("newPassword");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const passwordMsg = document.getElementById("passwordMsg");
+
+    try {
+      const res = await fetch(`${API_URL}/users/${currentUser.id}`);
+      const data = await res.json();
+      const u = data.user || currentUser;
+      nameInput.value = u.name || "";
+      emailInput.value = u.email || "";
+
+      localStorage.setItem("user", JSON.stringify({
+        ...currentUser,
+        name: u.name,
+        email: u.email
+      }));
+    } catch {
+      nameInput.value = currentUser.name || "";
+      emailInput.value = currentUser.email || "";
+    }
+
+    profileForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      profileMsg.textContent = "";
+      try {
+        const res = await fetch(`${API_URL}/users/${currentUser.id}/profile`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: nameInput.value.trim() })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Profile update failed");
+
+        localStorage.setItem("user", JSON.stringify(data.user));
+        renderAuthMenu(data.user);
+        profileMsg.textContent = "Profile updated successfully";
+        profileMsg.className = "auth-message auth-success";
+        if (typeof showToast === "function") showToast("Profile updated");
+      } catch (err) {
+        profileMsg.textContent = err.message || "Profile update failed";
+        profileMsg.className = "auth-message auth-error";
+      }
+    });
+
+    passwordForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      passwordMsg.textContent = "";
+      if (newPassword.value !== confirmPassword.value) {
+        passwordMsg.textContent = "New password and confirm password must match";
+        passwordMsg.className = "auth-message auth-error";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/users/${currentUser.id}/password`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            currentPassword: currentPassword.value,
+            newPassword: newPassword.value
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Password update failed");
+
+        passwordForm.reset();
+        passwordMsg.textContent = "Password updated successfully";
+        passwordMsg.className = "auth-message auth-success";
+        if (typeof showToast === "function") showToast("Password updated");
+      } catch (err) {
+        passwordMsg.textContent = err.message || "Password update failed";
+        passwordMsg.className = "auth-message auth-error";
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

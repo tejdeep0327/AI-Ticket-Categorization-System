@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - AI Ticket System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) window.location.href = "login.html";
+</script>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">AI</div>
+      AI Ticket
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="create.html">Create Ticket</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="help.html">Help Center</a></li>
+      <li id="authLink"></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="dashboard-shell">
+  <section class="dashboard-head">
+    <p class="dashboard-kicker">Account</p>
+    <h1>Settings</h1>
+    <p>Manage interface and dashboard preferences for your account.</p>
+  </section>
+
+  <section class="dashboard-table-card" style="margin-top:14px;">
+    <div class="dashboard-table-head">
+      <h2>Preferences</h2>
+      <span>Applied immediately</span>
+    </div>
+
+    <form id="settingsForm" class="dashboard-controls" style="grid-template-columns:1fr 1fr auto; margin-bottom:0;">
+      <select id="dateFormatSetting">
+        <option value="en-IN">Date Format: India (DD Mon YYYY)</option>
+        <option value="en-US">Date Format: US (Mon DD, YYYY)</option>
+      </select>
+
+      <select id="defaultSortSetting">
+        <option value="recent">Default Sort: Newest</option>
+        <option value="oldest">Default Sort: Oldest</option>
+        <option value="priority">Default Sort: Priority</option>
+        <option value="confidence">Default Sort: Confidence</option>
+      </select>
+
+      <button type="submit" class="control-btn">Save</button>
+    </form>
+
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px;">
+      <input id="darkModeSetting" type="checkbox" style="width:18px;height:18px;" />
+      <label for="darkModeSetting" style="font-weight:600;color:#334155;">Enable dark mode</label>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <ul class="footer-links">
+      <li><a href="#" class="about-link">About</a></li>
+      <li><a href="#" class="privacy-policy-link">Privacy Policy</a></li>
+      <li><a href="help.html#contact">Contact</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 AI Ticket System. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+  function renderAuthMenu(currentUser) {
+    const authLink = document.getElementById("authLink");
+    if (!authLink) return;
+
+    if (currentUser) {
+      const rawLabel = String(currentUser.name || currentUser.email || "Account");
+      const label = rawLabel.split(" ")[0];
+      const initial = label.charAt(0).toUpperCase();
+      authLink.innerHTML = `
+        <div class="auth-menu">
+          <button type="button" class="auth-menu-toggle">
+            <span class="auth-avatar">${initial}</span>
+            <span class="auth-label">${label}</span>
+            <span class="auth-caret">▾</span>
+          </button>
+          <div class="auth-dropdown">
+            <a href="profile.html" class="auth-menu-item">Profile</a>
+            <a href="settings.html" class="auth-menu-item">Settings</a>
+            <button type="button" class="auth-menu-item auth-logout-btn">Logout</button>
+          </div>
+        </div>`;
+    } else {
+      authLink.innerHTML = `<a href="login.html">Login</a>`;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    renderAuthMenu(currentUser);
+
+    const form = document.getElementById("settingsForm");
+    const dateFormat = document.getElementById("dateFormatSetting");
+    const defaultSort = document.getElementById("defaultSortSetting");
+    const darkMode = document.getElementById("darkModeSetting");
+
+    dateFormat.value = localStorage.getItem("setting_date_format") || "en-IN";
+    defaultSort.value = localStorage.getItem("setting_default_sort") || "recent";
+    darkMode.checked = (localStorage.getItem("setting_theme") || "light") === "dark";
+
+    darkMode.addEventListener("change", () => {
+      const mode = darkMode.checked ? "dark" : "light";
+      if (typeof applyTheme === "function") {
+        applyTheme(mode);
+      } else {
+        document.documentElement.setAttribute("data-theme", mode);
+        localStorage.setItem("setting_theme", mode);
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      localStorage.setItem("setting_date_format", dateFormat.value);
+      localStorage.setItem("setting_default_sort", defaultSort.value);
+      if (typeof showToast === "function") {
+        showToast("Settings saved");
+      } else {
+        alert("Settings saved");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

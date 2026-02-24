@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Ticket - AI Ticket System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="create-page">
+
+<!-- PROTECT PAGE -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) window.location.href = "login.html";
+});
+</script>
+
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">AI</div>
+      AI Ticket
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="create.html" class="active">Create Ticket</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="history.html">History</a></li>
+      <li><a href="help.html">Help Center</a></li>
+      <li id="authLink"></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="create-shell">
+  <section class="create-intro">
+    <p class="create-kicker">Ticket Intake</p>
+    <h1>Describe the issue once. Let AI handle the triage.</h1>
+    <p>
+      Submit clear issue details and the system will estimate category, priority, and confidence automatically.
+    </p>
+
+    <div class="create-tips">
+      <article>
+        <h3>1. Add context</h3>
+        <p>Include what happened, where it happened, and who is affected.</p>
+      </article>
+      <article>
+        <h3>2. Mention urgency</h3>
+        <p>Describe impact to help priority prediction become more accurate.</p>
+      </article>
+      <article>
+        <h3>3. Keep it specific</h3>
+        <p>Concrete details produce better categorization confidence.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="create-form-wrap">
+    <div class="create-form-card">
+      <h2>Create New Ticket</h2>
+      <p class="create-sub">Fill in the details below to submit your issue.</p>
+
+      <form id="ticketForm" class="create-form">
+        <div class="form-group">
+          <label for="title">Ticket Title *</label>
+          <input
+            type="text"
+            id="title"
+            placeholder="Brief summary of your issue"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea
+            id="description"
+            placeholder="Please provide detailed information about your issue..."
+            required></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary create-submit">
+          <span id="btnText">Submit Ticket</span>
+        </button>
+      </form>
+
+      <div id="alertContainer"></div>
+      <div id="resultBox" class="create-result" style="display:none;"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <ul class="footer-links">
+      <li><a href="#" class="about-link">About</a></li>
+      <li><a href="#" class="privacy-policy-link">Privacy Policy</a></li>
+      <li><a href="help.html#contact">Contact</a></li>
+    </ul>
+    <div class="footer-copy">
+      © 2026 AI Ticket System. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- LOGIN / LOGOUT -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const authLink = document.getElementById("authLink");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (!authLink) return;
+
+  if (user) {
+    const rawLabel = String(user.name || user.email || "Account");
+    const label = rawLabel.split(" ")[0];
+    const initial = label.charAt(0).toUpperCase();
+    authLink.innerHTML = `
+      <div class="auth-menu">
+        <button type="button" class="auth-menu-toggle">
+          <span class="auth-avatar">${initial}</span>
+          <span class="auth-label">${label}</span>
+          <span class="auth-caret">▾</span>
+        </button>
+        <div class="auth-dropdown">
+          <a href="profile.html" class="auth-menu-item">Profile</a>
+          <a href="settings.html" class="auth-menu-item">Settings</a>
+          <button type="button" class="auth-menu-item auth-logout-btn">Logout</button>
+        </div>
+      </div>`;
+  } else {
+    authLink.innerHTML = `<a href="login.html">Login</a>`;
+  }
+});
+</script>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

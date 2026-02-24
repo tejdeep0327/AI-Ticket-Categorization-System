@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center - AI Ticket System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="help-page">
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">AI</div>
+        AI Ticket
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="create.html">Create Ticket</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="history.html">History</a></li>
+        <li><a href="help.html" class="active">Help Center</a></li>
+        <li id="authLink"></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="help-shell">
+    <section class="help-hero">
+      <p class="help-kicker">Support Docs</p>
+      <h1>Help Center</h1>
+      <p>Quick answers for how AI Ticket works and how to submit better support requests.</p>
+    </section>
+
+    <section class="help-grid">
+      <article>
+        <h3>Best Practice</h3>
+        <p>Include exact error text and clear steps to reproduce for better model confidence.</p>
+      </article>
+      <article>
+        <h3>Classification Logic</h3>
+        <p>Ticket category and priority are predicted from issue context and urgency signals.</p>
+      </article>
+      <article>
+        <h3>Workflow</h3>
+        <p>Create ticket, review in dashboard, resolve, and track history in timeline view.</p>
+      </article>
+    </section>
+
+    <section class="faq-section">
+      <div class="faq-item">
+        <button class="faq-question">How does the AI categorization work?</button>
+        <div class="faq-answer">
+          Our AI uses natural language processing and machine learning to analyze
+          the content of your ticket. It examines keywords, context, and patterns
+          to automatically assign the ticket to the most appropriate category.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">What determines ticket priority?</button>
+        <div class="faq-answer">
+          The AI evaluates urgency indicators and impact keywords to assign
+          High, Medium, or Low priority.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">How accurate is the AI classification?</button>
+        <div class="faq-answer">
+          The system provides a confidence score for each prediction.
+          Accuracy typically ranges between 70% and 95%.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Can I view all my submitted tickets?</button>
+        <div class="faq-answer">
+          Yes. Visit the Dashboard page to view your tickets and their status.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">What information should I include in a ticket?</button>
+        <div class="faq-answer">
+          Include detailed information, error messages, expected behavior, and steps to reproduce
+          the issue for best AI accuracy.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">How long does it take to get a response?</button>
+        <div class="faq-answer">
+          Response time depends on ticket priority and support queue volume.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Is my ticket data secure?</button>
+        <div class="faq-answer">
+          Ticket data is stored in your backend and accessible only through your app context.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">Can I edit a ticket after submission?</button>
+        <div class="faq-answer">
+          Currently tickets cannot be edited after submission. You can create a follow-up ticket with updates.
+        </div>
+      </div>
+    </section>
+
+    <section class="help-cta" id="contact">
+      <h2>Contact Us</h2>
+      <p>Share your question and we will get back to you as soon as possible.</p>
+
+      <form id="contactForm" class="help-contact-form">
+        <input type="text" id="contactName" placeholder="Your name" required>
+        <input type="email" id="contactEmail" placeholder="Your email" required>
+        <textarea id="contactMessage" placeholder="Write your message..." required></textarea>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+      </form>
+      <div id="contactMsg" class="auth-message"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <ul class="footer-links">
+        <li><a href="#" class="about-link">About</a></li>
+        <li><a href="#" class="privacy-policy-link">Privacy Policy</a></li>
+        <li><a href="help.html#contact">Contact</a></li>
+      </ul>
+      <div class="footer-copy">
+        © 2026 AI Ticket System. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- FAQ Toggle Script -->
+  <script>
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const answer = button.nextElementSibling;
+        const isActive = answer.classList.contains('active');
+
+        document.querySelectorAll('.faq-answer').forEach(ans => {
+          ans.classList.remove('active');
+        });
+        document.querySelectorAll('.faq-question').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        if (!isActive) {
+          answer.classList.add('active');
+          button.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("contactForm");
+      const nameInput = document.getElementById("contactName");
+      const emailInput = document.getElementById("contactEmail");
+      const messageInput = document.getElementById("contactMessage");
+      const msgBox = document.getElementById("contactMsg");
+      if (!form || !msgBox) return;
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = (nameInput?.value || "").trim();
+        const email = (emailInput?.value || "").trim();
+        const message = (messageInput?.value || "").trim();
+
+        const subject = encodeURIComponent(`Contact Request from ${name || "AI Ticket User"}`);
+        const body = encodeURIComponent(
+`Name: ${name}
+Email: ${email}
+
+Message:
+${message}`
+        );
+
+        window.location.href = `mailto:tejdeep.939@gmail.com?subject=${subject}&body=${body}`;
+
+        msgBox.textContent = "Your email app has been opened with a prefilled message to tejdeep.939@gmail.com.";
+        msgBox.className = "auth-message auth-success";
+        form.reset();
+      });
+    });
+  </script>
+
+  <!-- Dynamic Login / Logout -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const authLink = document.getElementById("authLink");
+
+    if (user) {
+      const rawLabel = String(user.name || user.email || "Account");
+      const label = rawLabel.split(" ")[0];
+      const initial = label.charAt(0).toUpperCase();
+      authLink.innerHTML = `
+        <div class="auth-menu">
+          <button type="button" class="auth-menu-toggle">
+            <span class="auth-avatar">${initial}</span>
+            <span class="auth-label">${label}</span>
+            <span class="auth-caret">▾</span>
+          </button>
+          <div class="auth-dropdown">
+            <a href="profile.html" class="auth-menu-item">Profile</a>
+            <a href="settings.html" class="auth-menu-item">Settings</a>
+            <button type="button" class="auth-menu-item auth-logout-btn">Logout</button>
+          </div>
+        </div>`;
+    } else {
+      authLink.innerHTML = `<a href="login.html">Login</a>`;
+    }
+  </script>
+
+  <script src="js/app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Ticket System - Intelligent Support Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="home-page">
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">AI</div>
+        AI Ticket
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="create.html">Create Ticket</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="history.html">History</a></li>
+        <li><a href="help.html">Help Center</a></li>
+        <li id="authLink"></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="landing-shell">
+    <section class="landing-hero">
+      <div class="hero-browser">
+        <div class="hero-browser-body">
+          <div class="hero-layout">
+            <div class="hero-content">
+              <p class="landing-kicker">AI Support Automation Platform</p>
+              <h1>
+                <span class="hero-line">Manage support tickets with</span>
+                <span class="hero-line">AI speed and human-level control</span>
+              </h1>
+              <p class="landing-copy">
+                Predict category, urgency, and confidence instantly, then move every request through one clear operational workflow.
+              </p>
+              <div class="landing-actions">
+                <a href="create.html" class="btn btn-primary">Create Ticket</a>
+                <a href="dashboard.html" class="btn btn-white landing-outline-btn">Launch Dashboard</a>
+              </div>
+              <p class="hero-subproof">Trusted by internal support teams for daily triage and escalation decisions.</p>
+
+              <div class="hero-mini-stats">
+                <span>Fast ticket routing</span>
+                <span>Priority prediction</span>
+                <span>Confidence visibility</span>
+                <span>Audit-ready history</span>
+              </div>
+            </div>
+
+            <aside class="hero-preview" aria-label="Dashboard preview">
+              <div class="hero-preview-head">
+                <p>Live Queue Snapshot</p>
+                <span>Updated now</span>
+              </div>
+              <div class="hero-preview-metrics">
+                <article>
+                  <p>Open</p>
+                  <strong>24</strong>
+                </article>
+                <article>
+                  <p>Resolved</p>
+                  <strong>18</strong>
+                </article>
+                <article>
+                  <p>Avg. Confidence</p>
+                  <strong>82.6%</strong>
+                </article>
+              </div>
+              <ul class="hero-preview-list">
+                <li><span>Payment retry failed</span><em>High</em></li>
+                <li><span>Login OTP delay on mobile</span><em>Medium</em></li>
+                <li><span>Laptop fan issue reported</span><em>Low</em></li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-features">
+      <article class="landing-feature-card">
+        <p class="landing-feature-tag">Categorization Engine</p>
+        <h3>Auto-route incoming issues</h3>
+        <p>
+          Incoming requests are mapped to the right queue with calibrated multi-class prediction.
+        </p>
+      </article>
+
+      <article class="landing-feature-card">
+        <p class="landing-feature-tag">Priority Intelligence</p>
+        <h3>Escalate what matters first</h3>
+        <p>
+          Every ticket receives urgency scoring with confidence signals to support rapid decisions.
+        </p>
+      </article>
+
+      <article class="landing-feature-card">
+        <p class="landing-feature-tag">Operations Visibility</p>
+        <h3>Track ticket lifecycle end-to-end</h3>
+        <p>
+          Review open, resolved, and historical activity from one dashboard built for teams.
+        </p>
+      </article>
+    </section>
+
+    <section class="landing-how">
+      <h2>How AI Ticket works in 3 steps</h2>
+      <ol class="landing-steps">
+        <li>Submit title and issue details from the Create Ticket form.</li>
+        <li>Run model inference for category, priority, and confidence.</li>
+        <li>Manage queue flow and outcomes from Dashboard and History.</li>
+      </ol>
+    </section>
+
+    <section class="model-showcase">
+      <div class="model-showcase-head">
+        <p class="landing-kicker">Performance Benchmarks</p>
+        <h2>Measured model quality for production confidence</h2>
+        <p>
+          Updated metrics from the latest training run to validate reliability before deployment.
+        </p>
+      </div>
+
+      <div class="model-stats-grid">
+        <article class="model-stat-card">
+          <h3>Category Accuracy</h3>
+          <div class="model-stat-value">90.3%</div>
+          <p>Classification accuracy across supported issue types.</p>
+        </article>
+        <article class="model-stat-card">
+          <h3>Priority Accuracy</h3>
+          <div class="model-stat-value">98.1%</div>
+          <p>Prediction quality for High, Medium, and Low urgency labels.</p>
+        </article>
+        <article class="model-stat-card">
+          <h3>Training Samples</h3>
+          <div class="model-stat-value">20,000+</div>
+          <p>Labeled support records used for training and evaluation.</p>
+        </article>
+      </div>
+
+      <div class="model-detail-grid">
+        <article class="model-detail-card">
+          <h4>Confidence Calibration</h4>
+          <p>Confidence scores are normalized to improve operator trust and manual review workflows.</p>
+        </article>
+        <article class="model-detail-card">
+          <h4>Production Monitoring</h4>
+          <p>Live ticket data and historical activity support auditing, quality checks, and tuning cycles.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="landing-feature-suite">
+      <div class="landing-feature-suite-head">
+        <p class="landing-kicker">Feature Library</p>
+        <h2>All the features you need</h2>
+        <p>
+          AI Ticket gives your team practical tools to classify, prioritize, collaborate, and ship support workflows faster.
+        </p>
+      </div>
+      <div class="landing-feature-suite-grid">
+        <article>
+          <h3>AI category prediction</h3>
+          <p>Automatically classifies each ticket into support categories using your trained model.</p>
+        </article>
+        <article>
+          <h3>Priority prediction</h3>
+          <p>Assigns High, Medium, or Low urgency from ticket context to speed up triage decisions.</p>
+        </article>
+        <article>
+          <h3>Confidence scoring</h3>
+          <p>Shows model confidence for every ticket so teams can quickly review borderline cases.</p>
+        </article>
+        <article>
+          <h3>Centralized operations dashboard</h3>
+          <p>Manage ticket flow with search, filters, sorting, detail modal, and one-click status updates.</p>
+        </article>
+        <article>
+          <h3>Live performance visibility</h3>
+          <p>Track total tickets, open vs resolved workload, and average confidence in real time.</p>
+        </article>
+        <article>
+          <h3>History activity view</h3>
+          <p>Review chronological ticket records with category, priority, status, and confidence.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="landing-cta">
+      <h2>Start with your next ticket and scale from there.</h2>
+      <p>Use AI Ticket to streamline daily operations while keeping humans in the loop where needed.</p>
+      <div class="landing-actions">
+        <a href="create.html" class="btn btn-primary">Start Now</a>
+        <a href="help.html" class="btn btn-white landing-outline-btn">Contact Support</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <ul class="footer-links">
+        <li><a href="#" class="about-link">About</a></li>
+        <li><a href="#" class="privacy-policy-link">Privacy Policy</a></li>
+        <li><a href="help.html#contact">Contact</a></li>
+      </ul>
+      <div class="footer-copy">
+        © 2026 AI Ticket System. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Dynamic Login / Logout -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const authLink = document.getElementById("authLink");
+
+    if (user) {
+      const rawLabel = String(user.name || user.email || "Account");
+      const label = rawLabel.split(" ")[0];
+      const initial = label.charAt(0).toUpperCase();
+      authLink.innerHTML = `
+        <div class="auth-menu">
+          <button type="button" class="auth-menu-toggle">
+            <span class="auth-avatar">${initial}</span>
+            <span class="auth-label">${label}</span>
+            <span class="auth-caret">▾</span>
+          </button>
+          <div class="auth-dropdown">
+            <a href="profile.html" class="auth-menu-item">Profile</a>
+            <a href="settings.html" class="auth-menu-item">Settings</a>
+            <button type="button" class="auth-menu-item auth-logout-btn">Logout</button>
+          </div>
+        </div>`;
+    } else {
+      authLink.innerHTML = `<a href="login.html">Login</a>`;
+    }
+  </script>
+
+  <script src="js/app.js"></script>
+
+</body>
+</html>
