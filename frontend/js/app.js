@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5001";
+const API_URL = String(window.AI_TICKET_CONFIG?.API_URL || "http://localhost:5001").replace(/\/+$/, "");
 let dashboardTickets = [];
 
 function applyTheme(theme) {
