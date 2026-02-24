@@ -3,6 +3,10 @@ const sqlite3 = require('sqlite3').verbose()
 const cors = require('cors')
 const axios = require('axios')
 
+const PORT = Number(process.env.PORT || 5001)
+const DB_PATH = process.env.DB_PATH || './tickets.db'
+const ML_SERVICE_URL = (process.env.ML_SERVICE_URL || 'http://localhost:8000').replace(/\/+$/, '')
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -13,7 +17,7 @@ function parsePercent(value) {
 }
 
 // Create database
-const db = new sqlite3.Database('./tickets.db')
+const db = new sqlite3.Database(DB_PATH)
 
 // ==============================
 // CREATE USERS TABLE
@@ -241,7 +245,7 @@ app.post('/tickets', async (req, res) => {
       .filter(Boolean)
       .join(". ")
 
-    const ai = await axios.post('http://localhost:8000/predict', {
+    const ai = await axios.post(`${ML_SERVICE_URL}/predict`, {
       description: modelInput || String(description || "")
     })
 
@@ -317,6 +321,6 @@ app.put('/tickets/:id', (req, res) => {
   )
 })
 
-app.listen(5001, () => {
-  console.log("Backend running at http://localhost:5001")
+app.listen(PORT, () => {
+  console.log(`Backend running on port ${PORT}`)
 })
