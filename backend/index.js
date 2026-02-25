@@ -17,16 +17,20 @@ app.get('/', (req, res) => {
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function callMlPredict(payload) {
+  const retryDelaysMs = [3000, 8000, 15000]
   let lastError
-  for (let attempt = 1; attempt <= 2; attempt += 1) {
+  for (let attempt = 0; attempt <= retryDelaysMs.length; attempt += 1) {
     try {
       return await axios.post(`${ML_SERVICE_URL}/predict`, payload, { timeout: 45000 })
     } catch (err) {
       lastError = err
-      if (attempt < 2) {
-        // Render free instances can be cold; one short retry reduces false failures.
-        await sleep(2500)
+      const status = err?.response?.status
+      const isTransient = !status || status === 429 || status === 502 || status === 503 || status === 504
+      if (!isTransient || attempt >= retryDelaysMs.length) {
+        break
       }
+      // Render free instances can cold-start; retry transient upstream failures.
+      await sleep(retryDelaysMs[attempt])
     }
   }
   throw lastError
