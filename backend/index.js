@@ -267,12 +267,12 @@ app.post('/tickets', async (req, res) => {
     return res.status(401).json({ error: "Unauthorized. Please login." })
   }
 
-  try {
-    const modelInput = [title, description]
-      .map(v => String(v || "").trim())
-      .filter(Boolean)
-      .join(". ")
+  const modelInput = [title, description]
+    .map(v => String(v || "").trim())
+    .filter(Boolean)
+    .join(". ")
 
+  try {
     const ai = await callMlPredict({
       description: modelInput || String(description || "")
     })
@@ -316,7 +316,30 @@ app.post('/tickets', async (req, res) => {
     const upstreamData = err?.response?.data
     const details = upstreamData?.error || err?.message || "Unknown ML failure"
     console.error("ML request failed:", { upstreamStatus, details })
-    res.status(502).json({ error: `ML service error: ${details}` })
+    // Fallback mode: keep ticket workflow running when ML service is temporarily unavailable.
+    const fallbackCategory = "General"
+    const fallbackPriority = "Medium"
+    const fallbackConfidence = "--"
+    const fallbackReason = "Fallback used: ML service unavailable"
+
+    db.run(
+      `INSERT INTO tickets (user_id, title, description, category, priority, confidence, category_confidence, priority_confidence, priority_reason)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [user_id, title, description, fallbackCategory, fallbackPriority, fallbackConfidence, fallbackConfidence, fallbackConfidence, fallbackReason],
+      function (dbErr) {
+        if (dbErr) return res.status(500).json({ error: "Ticket save failed in fallback mode" })
+        res.status(201).json({
+          id: this.lastID,
+          category: fallbackCategory,
+          priority: fallbackPriority,
+          confidence: fallbackConfidence,
+          category_confidence: fallbackConfidence,
+          priority_confidence: fallbackConfidence,
+          priority_reason: fallbackReason,
+          warning: `ML service unavailable: ${details}`
+        })
+      }
+    )
   }
 })
 
