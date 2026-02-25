@@ -10,6 +10,10 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'ai-ticket-backend' })
+})
+
 function parsePercent(value) {
   const n = Number.parseFloat(String(value || "").replace("%", "").trim())
   return Number.isFinite(n) ? n : NaN
