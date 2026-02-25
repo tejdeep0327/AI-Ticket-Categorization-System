@@ -14,6 +14,24 @@ app.get('/', (req, res) => {
   res.json({ status: 'ok', service: 'ai-ticket-backend' })
 })
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+async function callMlPredict(payload) {
+  let lastError
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      return await axios.post(`${ML_SERVICE_URL}/predict`, payload, { timeout: 45000 })
+    } catch (err) {
+      lastError = err
+      if (attempt < 2) {
+        // Render free instances can be cold; one short retry reduces false failures.
+        await sleep(2500)
+      }
+    }
+  }
+  throw lastError
+}
+
 function parsePercent(value) {
   const n = Number.parseFloat(String(value || "").replace("%", "").trim())
   return Number.isFinite(n) ? n : NaN
@@ -248,7 +266,7 @@ app.post('/tickets', async (req, res) => {
       .filter(Boolean)
       .join(". ")
 
-    const ai = await axios.post(`${ML_SERVICE_URL}/predict`, {
+    const ai = await callMlPredict({
       description: modelInput || String(description || "")
     })
 
@@ -287,8 +305,11 @@ app.post('/tickets', async (req, res) => {
       }
     )
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: "ML service error" })
+    const upstreamStatus = err?.response?.status
+    const upstreamData = err?.response?.data
+    const details = upstreamData?.error || err?.message || "Unknown ML failure"
+    console.error("ML request failed:", { upstreamStatus, details })
+    res.status(502).json({ error: `ML service error: ${details}` })
   }
 })
 
