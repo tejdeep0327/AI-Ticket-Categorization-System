@@ -5,7 +5,7 @@ const axios = require('axios')
 
 const PORT = Number(process.env.PORT || 5001)
 const DB_PATH = process.env.DB_PATH || './tickets.db'
-const ML_SERVICE_URL = (process.env.ML_SERVICE_URL || "https://ai-ticket-categorization-system-2.onrender.com").replace(/\/+$/, "")
+const ML_SERVICE_URL = (process.env.ML_SERVICE_URL || "https://ai-ticket-categorization-system-1.onrender.com").replace(/\/+$/, "")
 const app = express()
 app.use(cors())
 app.use(express.json())
