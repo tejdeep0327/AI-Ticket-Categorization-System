@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function callMlPredict(payload) {
-  const retryDelaysMs = [3000, 8000, 15000]
+  const retryDelaysMs = [4000, 10000, 20000, 30000]
   let lastError
   for (let attempt = 0; attempt <= retryDelaysMs.length; attempt += 1) {
     try {
@@ -29,8 +29,11 @@ async function callMlPredict(payload) {
       if (!isTransient || attempt >= retryDelaysMs.length) {
         break
       }
-      // Render free instances can cold-start; retry transient upstream failures.
-      await sleep(retryDelaysMs[attempt])
+      const retryAfterRaw = err?.response?.headers?.['retry-after']
+      const retryAfterSeconds = Number.parseInt(String(retryAfterRaw || ""), 10)
+      const retryAfterMs = Number.isFinite(retryAfterSeconds) ? retryAfterSeconds * 1000 : 0
+      // Respect upstream Retry-After when available; otherwise use exponential backoff.
+      await sleep(Math.max(retryDelaysMs[attempt], retryAfterMs))
     }
   }
   throw lastError
