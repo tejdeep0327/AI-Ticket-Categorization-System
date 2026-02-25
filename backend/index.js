@@ -319,7 +319,7 @@ app.post('/tickets', async (req, res) => {
     // Fallback mode: keep ticket workflow running when ML service is temporarily unavailable.
     const fallbackCategory = "General"
     const fallbackPriority = "Medium"
-    const fallbackConfidence = "--"
+    const fallbackConfidence = "50.00%"
     const fallbackReason = "Fallback used: ML service unavailable"
 
     db.run(
