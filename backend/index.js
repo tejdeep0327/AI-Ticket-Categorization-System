@@ -14,6 +14,20 @@ app.get('/', (req, res) => {
   res.json({ status: 'ok', service: 'ai-ticket-backend' })
 })
 
+app.get('/health/ml', async (req, res) => {
+  try {
+    const ml = await axios.get(`${ML_SERVICE_URL}/`, { timeout: 12000 })
+    res.json({ status: 'ok', ml_status: ml.status })
+  } catch (err) {
+    const upstreamStatus = err?.response?.status || null
+    res.status(503).json({
+      status: 'degraded',
+      error: 'ML service temporarily unavailable',
+      upstream_status: upstreamStatus
+    })
+  }
+})
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
 async function callMlPredict(payload) {

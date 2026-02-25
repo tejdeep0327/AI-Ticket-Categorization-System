@@ -712,6 +712,12 @@ body {
     color: #065f46;
     border: 1px solid #6ee7b7;
   }
+
+  .alert-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+  }
   
 @media (max-width: 768px) {
     .nav-links {

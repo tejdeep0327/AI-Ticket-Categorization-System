@@ -53,6 +53,19 @@ function setupCreateTicket() {
 
   const form = document.getElementById("ticketForm");
   if (!form) return;
+  const alertContainer = document.getElementById("alertContainer");
+  checkMlAvailability();
+
+  async function checkMlAvailability() {
+    if (!alertContainer) return;
+    try {
+      const res = await fetch(`${API_URL}/health/ml`);
+      if (res.ok) return;
+      showAlert("AI model service is warming up. Ticket submission still works using fallback prediction.", "warning", 7000);
+    } catch {
+      showAlert("AI model service is warming up. Ticket submission still works using fallback prediction.", "warning", 7000);
+    }
+  }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -69,8 +82,6 @@ function setupCreateTicket() {
     const submitBtn = document.getElementById("submitBtn");
     const btnText = document.getElementById("btnText");
     const resultBox = document.getElementById("resultBox");
-    const alertContainer = document.getElementById("alertContainer");
-
     submitBtn.disabled = true;
     btnText.innerHTML = `<span class="loading"></span> Processing...`;
     if (resultBox) resultBox.style.display = "none";
@@ -92,12 +103,16 @@ function setupCreateTicket() {
       if (!response.ok) throw new Error(result.error || "Failed to create ticket");
 
       if (resultBox) {
+        const warningBlock = result.warning
+          ? `<div class="alert alert-warning" style="margin-top:10px;">${escapeHTML(result.warning)}</div>`
+          : "";
         resultBox.innerHTML = `
           <h3>✓ Ticket Created Successfully!</h3>
           <div class="result-item"><span class="result-label">Ticket ID:</span><span class="result-value">${formatTicketId(result.ticket_id || result.id)}</span></div>
           <div class="result-item"><span class="result-label">Category:</span><span class="result-value">${result.category}</span></div>
           <div class="result-item"><span class="result-label">Priority:</span><span class="result-value">${result.priority}</span></div>
           <div class="result-item"><span class="result-label">Confidence:</span><span class="result-value">${formatConfidence(result.confidence)}</span></div>
+          ${warningBlock}
         `;
         resultBox.style.display = "block";
       }
@@ -520,11 +535,11 @@ async function resolveTicket(id){
 /* ===============================
    HELPERS
 ================================*/
-function showAlert(message, type) {
+function showAlert(message, type, duration = 4000) {
   const alertContainer = document.getElementById("alertContainer");
   if (!alertContainer) return;
   alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-  setTimeout(() => alertContainer.innerHTML = "", 4000);
+  setTimeout(() => alertContainer.innerHTML = "", duration);
 }
 
 function formatDate(dateString) {
